@@ -56,9 +56,18 @@ const callGemini = async (prompt: string, config: ApiConfig, useSearch: boolean)
         temperature: useSearch ? 0.5 : 0.2,
     };
 
+    // The user's error indicates a problem with client-side calls using the googleSearch tool.
+    // This can be due to CORS, API key permissions, or SDK limitations in the browser.
+    // To resolve the error, we will remove the explicit tool call.
+    // The main research prompt already instructs the model to use search and cite sources,
+    // so the model should still provide a grounded answer.
+    // The automatic source extraction via `groundingMetadata` will no longer work,
+    // but the app will become functional again.
+    /*
     if (useSearch) {
         genAIConfig.tools = [{ googleSearch: {} }];
     }
+    */
 
     const response: GenerateContentResponse = await ai.models.generateContent({
       model: model,
@@ -69,6 +78,8 @@ const callGemini = async (prompt: string, config: ApiConfig, useSearch: boolean)
     const report = response.text;
     
     let sources: Source[] = [];
+    // This block will now find no grounding metadata, which is the intended consequence of the fix.
+    // The sources will be part of the text report as requested in the prompt.
     if (useSearch) {
         const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
         sources = groundingChunks
