@@ -1,0 +1,5 @@
+{
+  "name": "AI Multi-Modal Researcher",
+  "description": "An AI-powered research assistant that generates a research plan and then synthesizes a detailed report from web sources, inspired by the langchain-ai/multi-modal-researcher project.",
+  "requestFramePermissions": []
+}
